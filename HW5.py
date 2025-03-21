@@ -7,15 +7,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-NUM_CENTROIDS=9
+NUM_CENTROIDS=20
 
-data = pd.read_csv('JoensuuRegion.txt', delimiter=',', header=None, names=['X','Y'])
+data = pd.read_csv('FinlandWhole.txt', delimiter=',', header=None, names=['X','Y'])
 
 # random seed for reproducibility
-# np.random.seed(47)
+np.random.seed(47)
 
 X = data['X']
 Y = data['Y']
+
+def normalize(X):
+    return (X - np.min(X)) / (np.max(X) - np.min(X))
+
+X = normalize(X)
+Y = normalize(Y)
+
 
 # init random centroids
 centroids_x = np.random.choice(X, NUM_CENTROIDS)
@@ -26,7 +33,7 @@ centroids_y = np.random.choice(Y, NUM_CENTROIDS)
 
 Distance = np.zeros((np.shape(X)[0], NUM_CENTROIDS))
 
-epochs = 100
+epochs = 50
 
 for i in range(epochs):
     print(f"Epoch {i+1}/{epochs}")
@@ -83,6 +90,10 @@ for i in range(epochs):
     # Divide by number of centroids to get mean entropy
     mean_cluster_entropy /= NUM_CENTROIDS
     print(f"Mean Cluster Entropy: {mean_cluster_entropy}")
+
+for i in range(len(centroids_x)):
+    print(f"Centroid {i+1}: ({centroids_x[i]:.3f}, {centroids_y[i]:.3f})")
+
 
 plt.xlabel('x')
 plt.ylabel('y')
